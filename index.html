@@ -1,0 +1,376 @@
+<html>
+  <head>
+    <title>DanteApp</title>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="estilos.css" />
+  </head>
+  <body>
+    <div id="llamadas">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-8">
+            <div class="row elementoForm">
+              <div class="form-floating">
+                <input
+                  v-model="seComunica"
+                  type="text"
+                  class="form-control"
+                  id="txtComunica"
+                  placeholder="Cliente"
+                  autocomplete="off"
+                />
+                <label for="txtComunica">Se comunica</label>
+              </div>
+            </div>
+            <div class="row elementoForm">
+              <div class="form-floating">
+                <input
+                  v-model="cuenta"
+                  type="text"
+                  class="form-control"
+                  id="txtCuenta"
+                  placeholder="0200XXXXXX"
+                  autocomplete="off"
+                />
+                <label for="txtCuenta">Cuenta</label>
+              </div>
+            </div>
+            <div class="row elementoForm">
+              <div class="form-floating">
+                <input
+                  v-model="segmento"
+                  type="text"
+                  class="form-control"
+                  id="txtSegmento"
+                  placeholder="I, II, III o IV"
+                  autocomplete="off"
+                />
+                <label for="txtSegmento">Segmento</label>
+              </div>
+            </div>
+            <div class="row elementoForm">
+              <div class="form-floating">
+                <textarea
+                  class="form-control"
+                  style="height: 250px"
+                  v-model="descripcion"
+                  placeholder="Comentarios"
+                  id="txtDescripcion"
+                ></textarea>
+                <label for="txtDescripcion">Descripcion</label>
+              </div>
+            </div>
+            <div class="row elementoForm">
+              <div class="form-floating">
+                <input
+                  v-model="folio"
+                  type="text"
+                  class="form-control"
+                  id="txtFolio"
+                  placeholder="129xxxxx"
+                  autocomplete="off"
+                />
+                <label for="txtFolio">Folio</label>
+              </div>
+            </div>
+            <textarea id="MiCopia" style="display: none"></textarea>
+
+            <button class="btn btn-info" @click="plantillaInformativa">
+              P. Informativa
+            </button>
+            <button class="btn btn-success" @click="guardarLlamada">
+              Guardar
+            </button>
+            <button class="btn btn-warning" @click="limpiarForm">
+              Limpiar Formulario
+            </button>
+
+            <button
+              class="btn btn-primary boton-derecha"
+              @click="recupUltimaInterac"
+            >
+              Ultima Interaccion
+            </button>
+          </div>
+          <div class="col-4">
+            <div id="contenedorLlamadas">
+              <div class="accordion" id="Llamadas">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseOne"
+                      aria-expanded="true"
+                      aria-controls="collapseOne"
+                    >
+                      <i class="bi bi-telephone"></i>Llamadas registradas
+                    </button>
+                  </h2>
+                  <div
+                    id="collapseOne"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingOne"
+                    data-bs-parent="#Llamadas"
+                  >
+                    <div class="accordion-body">
+                      <b>Tickets generados hoy:</b> {{listaDeLlamadas.length}}
+                      <div
+                        id="listaLlamadas"
+                        v-for="llamada in listaDeLlamadas"
+                      >
+                        <hr />
+                        <i class="bi bi-clock-fill"></i>{{llamada.hora}} hrs.<br />
+                        <b>Segmento: </b>{{llamada.segmento}}<br />
+                        <b>Se comunica: </b>{{llamada.seComunica}}<br />
+                        <b>Cuenta: </b>{{llamada.cuenta}}<br />
+                        <b>Descripcion: </b>{{llamada.descripcion}}<br />
+                        <b>Folio: </b>{{llamada.folio}}<br />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading2">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapse2"
+                      aria-expanded="true"
+                      aria-controls="collapse2"
+                    >
+                      <i class="bi bi-book"></i>Plantillas Knowledge Base
+                    </button>
+                  </h2>
+                  <div
+                    id="collapse2"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="heading2"
+                    data-bs-parent="#Llamadas"
+                  >
+                    <div class="accordion-body">
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="agregarMasivaManual"
+                      >
+                        Masiva
+                      </button>
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="plantillaReubicacionONT"
+                      >
+                        Reubicacion ONT
+                      </button>
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="plantillaCambioDomic"
+                      >
+                        Camb. Instalacion
+                      </button>
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="plantillaMesaDeAyuda"
+                      >
+                        Mesa de ayuda
+                      </button>
+
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="plantillaGeneralDatos"
+                      >
+                        Gral. Datos
+                      </button>
+
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="plantillaGeneralVoz"
+                      >
+                        Gral. Voz
+                      </button>
+
+                      <button
+                        class="btn btn-primary botonera"
+                        @click="plantillaFortinet"
+                      >
+                        Fortinet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading20">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapse20"
+                      aria-expanded="true"
+                      aria-controls="collapse20"
+                    >
+                      <i class="bi bi-card-text"></i>Descripciones genericas
+                    </button>
+                  </h2>
+                  <div
+                    id="collapse20"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="heading20"
+                    data-bs-parent="#Llamadas"
+                  >
+                    <div class="accordion-body">
+                      <button
+                        class="btn btn-info botonera"
+                        @click="plantillaTransferencia"
+                      >
+                        Transferencia
+                      </button>
+                      <button
+                        class="btn btn-info botonera"
+                        @click="plantillaEnvioFactura"
+                      >
+                        Env. Factura
+                      </button>
+                      <button
+                        class="btn btn-info botonera"
+                        @click="plantillaAtencionCARE"
+                      >
+                        Rev. CARE
+                      </button>
+                      <button
+                        class="btn btn-info botonera"
+                        @click="plantillaAtencionCAREMW"
+                      >
+                        Rev. CARE MW
+                      </button>
+                      <button
+                        class="btn btn-info botonera"
+                        @click="plantillaLOS"
+                        id="btnLOS"
+                      >
+                        CFO LED LOS
+                      </button>
+                      <button
+                        class="btn btn-info botonera"
+                        @click="plantillaU2000"
+                        id="btnCFOU2000"
+                      >
+                        CFO U2000
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading21">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapse21"
+                      aria-expanded="true"
+                      aria-controls="collapse21"
+                    >
+                      <i class="bi bi-file-earmark-medical"></i>Fast Scripts
+                    </button>
+                  </h2>
+                  <div
+                    id="collapse21"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="heading21"
+                    data-bs-parent="#Llamadas"
+                  >
+                    <div class="accordion-body">
+                      <button
+                        class="btn btn-warning botonera"
+                        @click="scriptDeCalidad"
+                        id="btnCalidad"
+                      >
+                        Script Calidad
+                      </button>
+                      <button
+                        class="btn btn-warning botonera"
+                        @click="scriptDeMasiva"
+                        id="btnMasiva"
+                      >
+                        Script Masiva
+                      </button>
+                      <button
+                        class="btn btn-warning botonera"
+                        @click="scriptSinHerramientas"
+                        id="btnSinHerramientas"
+                      >
+                        Script Sin Herramientas
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading3">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapse3"
+                      aria-expanded="true"
+                      aria-controls="collapse3"
+                    >
+                      <i class="bi bi-magic"></i>Limpiar
+                    </button>
+                  </h2>
+                  <div
+                    id="collapse3"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="heading3"
+                    data-bs-parent="#Llamadas"
+                  >
+                    <div class="accordion-body">
+                      <button class="btn btn-info" @click="limpiarForm">
+                        Limpiar Formulario
+                      </button>
+                      <button class="btn btn-info" @click="limpiarTodo">
+                        Limpiar Todo
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-floating">
+              <textarea
+                class="form-control"
+                style="height: 150px"
+                v-model="notas"
+                placeholder="Notas"
+                id="txtNotas"
+              ></textarea>
+              <label for="txtNotas">Notas</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="app.js"></script>
+  </body>
+</html>
